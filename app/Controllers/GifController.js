@@ -30,7 +30,28 @@ function _activeDraw() {
 }
 
 function _drawMyGifs() {
-  console.log('My Gifs working...')
+
+  let gifs = store.State.myGifs;
+  let preview = document.getElementById('collection-view')
+  let template = '';
+  console.log(gifs);
+  gifs.forEach(g => {
+
+    if (g._id) {
+      g.id = g._id;
+    }
+
+    template += `
+
+    <div class="card" style="width: 7rem;" onclick="app.gifsController.getActive('${g.id}', true)">
+      <img src="${g.url}" class="card-img-top" alt="...">
+    </div>
+
+    `
+    console.log(g.url)
+  });
+  preview.innerHTML = template;
+
 }
 
 //Public
@@ -56,5 +77,10 @@ export default class GifsController {
   }
   collectGif(id) {
     GifService.collectGif(id);
+  }
+
+  deleteGif(id) {
+    console.log(id)
+    GifService.deleteGif(id);
   }
 }

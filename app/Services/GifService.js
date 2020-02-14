@@ -23,7 +23,12 @@ class GifService {
   }
 
   getActive(id, prop) {
-    let gif = store.State.Gifs.find(g => g.id == id);
+    let gif;
+    if (prop == false) {
+      gif = store.State.Gifs.find(g => g.id == id);
+    } else {
+      gif = store.State.myGifs.find(g => g.id == id);
+    }
     gif.collected = prop;
     store.commit('activeGif', gif);
   }
@@ -38,17 +43,31 @@ class GifService {
 
   collectGif(id) {
     let gif = store.State.Gifs.find(g => g.id == id);
-    let myGifs = { ...store.State.myGifs, gif }
+    // @ts-ignore
+    gif.url = gif.images.original.url;
+    let myGifs = [...store.State.myGifs, gif]
     store.commit('myGifs', myGifs);
-    console.log(store.State.myGifs)
 
     _sandboxApi.post('', gif)
       .then(res => {
-
+        this.getMyGifs();
       })
       .catch(error => console.error(error))
   }
 
+  deleteGif(id) {
+
+    _sandboxApi.delete(id)
+      .then(res => {
+
+        let newGifs = store.State.myGifs.filter(g => {
+          return g.id != id && g._id != id
+        });
+        store.commit('myGifs', newGifs);
+        document.getElementById('active-view').innerHTML = ''
+      })
+      .catch(error => console.error(error))
+  }
 }
 
 const service = new GifService();

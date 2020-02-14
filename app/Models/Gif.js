@@ -16,7 +16,7 @@ export default class Gif {
         if (prop == false) {
             return `<button onclick="app.gifsController.collectGif('${this.id}')" class="btn btn-success">Add to Collection</button>`
         } else {
-            return `<button class="btn btn-danger">Remove</button>`
+            return `<button onclick="app.gifsController.deleteGif('${this.id}')" class="btn btn-danger">Remove</button>`
         }
     }
 
